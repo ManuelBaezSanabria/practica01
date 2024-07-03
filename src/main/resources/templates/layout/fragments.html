@@ -1,11 +1,16 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    
+<head th:replace="~{layout/plantilla :: head}">
+        <title>Practica01</title>
+        <meta charset="UTF-8"/>
+    </head>
+    
 <body>
     <!-- Fragmento de Header -->
-    <div th:fragment="header">
+    <section th:fragment="header">
+    <div>
         <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <a class="navbar-brand" href="#">Practica01</a>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -17,7 +22,7 @@
             </div>
         </nav>
     </div>
-
+</section>
     <!-- Fragmento de Footer -->
     <div th:fragment="footer">
         <footer class="footer mt-auto py-3 bg-light">

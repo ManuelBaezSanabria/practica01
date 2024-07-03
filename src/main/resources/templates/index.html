@@ -1,11 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Practica01</title>
-</head>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    
+<head th:replace="~{layout/plantilla :: head}">
+        <title>Inicio - Practica01</title>
+        <meta charset="UTF-8"/>
+    </head>
+    
 <body>
     <div th:replace="layout/layout :: layout (~{::body})" th:with="content='index-content :: content'"></div>
 </body>
+    
 </html>
