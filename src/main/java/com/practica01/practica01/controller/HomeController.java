@@ -1,4 +1,4 @@
-package com.example.practica01;
+package com.practica01.practica01.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
