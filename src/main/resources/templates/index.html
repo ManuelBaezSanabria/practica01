@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<!-- Esta es la primera página hhtml dinámica-->
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>Peluquería</title>
+        <meta charset="UTF-8"/>
+        <link rel="stylesheet" href="styles.css">
+
+    </head>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <body >
+        <header th:replace="~{layout/plantilla :: header}"/>
+
+        <div class="w-full h-screen flex items-center justify-center">
+            <div class="max-w-[750px]">
+                <div
+                    x-data="{ activeSlide: 1, slideCount: 3 }"
+                    class="overflow-hidden relative"
+                    >
+                    <!-- Slider -->
+                    <!-- You can remove x-init if you dont want to autoplay -->
+                    <div
+                        class="whitespace-nowrap transition-transform duration-500 ease-in-out"
+                        :style="'transform: translateX(-' + (activeSlide - 1) * 100.5 + '%)'"
+                        x-init="setInterval(() => { activeSlide = activeSlide < slideCount ? activeSlide + 1 : 1 }, 5000)"
+                        >
+                        <!-- Img 1 -->
+                        <div class="inline-block w-full max-h-[360px]">
+                            <img
+                                src="https://image.jimcdn.com/app/cms/image/transf/none/path/sfcf211a31dbb7fe3/image/ibc429c65c773f9a1/version/1609536583/cual-es-la-diferencia-entre-barbero-peluquero-y-estilista.jpg"
+                                alt=""
+                                />
+                        </div>
+                        <!-- Img 2 -->
+                        <div class="inline-block w-full max-h-[360px]">
+                            <img
+                                src="https://modaellos.com/wp-content/uploads/2022/11/los-mejores-cortes-de-cabello-invierno-2023-pelo-corto.jpg"
+                                alt=""
+                                />
+                        </div>
+                        <!-- Img 3 -->
+                        <div class="inline-block w-full max-h-[360px]">
+                            <img
+                                src="https://www.fabricbarberia.com/wp-content/uploads/2019/01/pelo-hombre-770x476.jpg"
+                                alt=""
+                                />
+                        </div>
+                    </div>
+
+                    
+                    <div class="absolute inset-0 flex items-center justify-between px-2">
+                        <button
+                            @click="activeSlide = activeSlide > 1 ? activeSlide - 1 : slideCount"
+                            class="w-[30px] h-[30px] flex items-center bg-black/30 text-white p-2 rounded-full"
+                            >
+                            &#8592;
+                        </button>
+                        <button
+                            @click="activeSlide = activeSlide < slideCount ? activeSlide + 1 : 1"
+                            class="w-[30px] h-[30px] flex items-center bg-black/30 text-white p-2 rounded-full"
+                            >
+                            &#8594;
+                        </button>
+                    </div>
+
+                    
+                    <div
+                        class="absolute bottom-0 left-0 right-0 flex justify-center space-x-2 p-4"
+                        >
+                        <template x-for="slideIndex in slideCount" :key="slideIndex">
+                            <button
+                                @click="activeSlide = slideIndex"
+                                class="h-2 w-2 rounded-full"
+                                :class="{'bg-orange-500': activeSlide === slideIndex, 'bg-white/50': activeSlide !== slideIndex}"
+                                ></button>
+                        </template>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="script.js"></script>
+
+        <footer th:replace="~{layout/plantilla :: footer}"/>
+    </body>
+</html>

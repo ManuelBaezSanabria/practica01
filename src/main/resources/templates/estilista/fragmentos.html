@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<!--
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/html.html to edit this template
+-->
+<html xmlns = "http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{layout/plantilla :: head}">
+        <title>TechShopci</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body >
+        <!-- 1 Sección para crear el boton de agregar... llamará a una ventana modal-->
+        <section th:fragment="botonesAgregar" class="py-4 mb-4 bg-light">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3">   
+                        <button 
+                            type="button" 
+                            class="btn btn-primary btn-block" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#agregarCategoria">
+                            <i class="fas fa-plus"></i> [[#{estilista.agregar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2 Fragmento para agregar categoria, es la ventana modal -->
+        <section th:fragment="agregarEstilista">
+            <div id="agregarEstilista" 
+                 class="modal fade" 
+                 tabindex="-1" 
+                 aria-labelledby="exampleModalLabel" 
+                 aria-hidden="true">
+                <div class="modal-dialog modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-info text-white">
+                            <h5 class="modal-title">[[#{estilista.agregar}]]</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div> 
+                        <form th:action="@{/estilista/guardar}" th:object="${estilista}"
+                              method="POST" class="was-validated" enctype="multipart/form-data">
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="nombre">[[#{estilista.nombre}]]</label>
+                                    <input type="text" class="form-control" name="nombre" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="apellido1">[[#{estilista.apellido1}]]</label>
+                                    <input class="form-control" type="text" name="apellido1" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="apellido2">[[#{estilista.apellido2}]]</label>
+                                    <input class="form-control" type="text" name="apellido2" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="especialidad">[[#{estilista.especialidad}]]</label>
+                                    <input class="form-control" type="text" name="especialidad" required="true"/>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="imagenurl">[[#{estilista.rutaImagen}]]</label>
+                                    <input class="form-control" type="file" name="imagenFile" onchange="readURL(this);"/>
+                                    <img id="blah" src="#" alt="your image" height="200"/>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" type="submit">Guardar</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3 Sección principal para mostrar la informaccion de la entidad categoria -->
+        <section th:fragment="listadoEstilistas" id="estilistas">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{estilista.listado}]]</h4>
+                            </div>
+                            <div th:if="${estilistas != null and !estilistas.empty}">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr><th>#</th>
+                                            <th>[[#{estilista.nombre}]]</th>
+                                            <th>[[#{estilista.apellido1}]]</th>
+                                            <th>[[#{estilista.especialidad}]]</th>
+                                            <th></th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="estilista, contador : ${estilistas}">
+                                            <td>[[${contador.count}]]</td>
+                                            <td>[[${estilista.nombre}]]</td>
+                                            <td>[[${estilista.apellido1}]]</td>
+                                            <td>[[${estilista.especialidad}]]</td>
+                                            <td><a th:href="@{/estilista/eliminar/}+${estilista.estilistaid}"
+                                                   class="btn btn-danger">
+                                                    <i class="fas fa-trash"></i> [[#{accion.eliminar}]]</a>
+                                                <a th:href="@{/estilista/modificar/}+${estilista.estilistaid}"
+                                                   class="btn btn-success">
+                                                    <i class="fas fa-pencil"></i> [[#{accion.actualizar}]]</a></td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${estilistas == null or estilistas.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-success text-white mb-3">
+                            <div class="card-body">
+                                <h3>[[#{estilista.total}]]</h3>
+                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalEstilistas}]]</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4 Fragmento que se utiliza en la página modifca.html -->
+        <section th:fragment="editarEstilista">
+            <div class="row">
+                <div class="col-md-2"></div>
+                <div class="col-md-8">
+                    <form method="POST"
+                          th:action="@{/estilista/guardar}" 
+                          th:object="${estilista}"
+                          class="was-validated"                          
+                          enctype="multipart/form-data">
+                        <input type="hidden" name="estilistaid" th:field="*{estilistaid}"/>
+                        <input type="hidden" name="imagenurl" th:field="*{imagenurl}"/>
+                        <section th:replace="~{estilista/fragmentos :: botonesEditar}"/>
+                        <div id=details>
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col">
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h4>[[#{accion.actualizar}]]</h4>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="mb-3">
+                                                    <label for="nombre">[[#{estilista.nombre}]]</label>
+                                                    <input type="text" class="form-control" name="nombre" th:field="*{nombre}" required="true"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="apellido1">[[#{estilista.apellido1}]]</label>
+                                                    <input class="form-control" type="text" name="apellido1" th:field="*{apellido1}" required="true"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="apellido2">[[#{estilista.apellido2}]]</label>
+                                                    <input class="form-control" type="text" name="apellido2" th:field="*{apellido2}" required="true"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="especialidad">[[#{estilista.especialidad}]]</label>
+                                                    <input class="form-control" type="text" name="especialidad" th:field="*{especialidad}" required="true"/>
+                                                </div>
+                                                <div class="mb-3">
+                                                    <label for="imagenurl">[[#{estilista.rutaImagen}]]</label>
+                                                    <input class="form-control" type="file" name="imagenFile" onchange="readURL(this);"/>
+                                                    <img id="blah" th:src="@{${estilista.imagenurl}}" alt="your image" height="200"/>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button class="btn btn-primary" type="submit">Guardar</button>
+                                            </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5 Fragmento que se utiliza en el fragmento anterior -->
+        <section th:fragment="botonesEditar">
+            <div class="container py-4 mb-4 bg-light">
+                <div class="row">
+                    <div class="col-md-4 d-grid">
+                        <a th:href="@{/estilista/listado}" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i> [[#{accion.regresar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">                                
+                        <a th:href="@{/estilista/eliminar/}+${estilista.estilistaid}"
+                           class="btn btn-danger">
+                            <i class="fas fa-trash"></i> [[#{accion.eliminar}]]
+                        </a>
+                    </div>
+                    <div class="col-md-4 d-grid">
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> [[#{accion.guardar}]]
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section> 
+        
+        <!--Fragemento de visualización para usuarios -->
+                <!-- 3 Sección principal para mostrar la informaccion de la entidad categoria -->
+        <section th:fragment="listadoEstilistasUsers" id="estilistas">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="card">
+                            <div class="card-header">
+                                <h4>[[#{estilista.listado}]]</h4>
+                            </div>
+                            <div th:if="${estilistas != null and !estilistas.empty}">
+                                <table class="table table-striped table-hover">
+                                    <thead class="table-dark">
+                                        <tr><th>#</th>
+                                            <th>[[#{estilista.nombre}]]</th>
+                                            <th>[[#{estilista.apellido1}]]</th>
+                                            <th>[[#{estilista.especialidad}]]</th>
+                                            <th></th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="estilista, contador : ${estilistas}">
+                                            <td>[[${contador.count}]]</td>
+                                            <td>[[${estilista.nombre}]]</td>
+                                            <td>[[${estilista.apellido1}]]</td>
+                                            <td>[[${estilista.especialidad}]]</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center p-2" th:if="${estilistas == null or estilistas.empty}">
+                                <span>[[#{lista.vacia}]]</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="card text-center bg-success text-white mb-3">
+                            <div class="card-body">
+                                <h3>[[#{estilista.total}]]</h3>
+                                <h4 class="fs-2"><i class="fas fa-users"></i> [[${totalEstilistas}]]</h4>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </body>
+</html>
